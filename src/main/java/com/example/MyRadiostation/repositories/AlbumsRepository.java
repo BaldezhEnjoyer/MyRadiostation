@@ -1,4 +1,7 @@
 package com.example.MyRadiostation.repositories;
 
-public interface AlbumsRepository {
+import com.example.MyRadiostation.models.Album;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AlbumsRepository extends JpaRepository<Album,Long> {
 }

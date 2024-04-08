@@ -8,7 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="Tracks")
@@ -25,8 +27,16 @@ public class Track {
      @Column(name="Date_Create")
      @DateTimeFormat(pattern = "yyyy-MM-dd")
      private Date datecreate;
+     @ManyToOne(cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
+     @JoinColumn(name = "Id_Album")
+     private Album album;
 
-    public Track(Date datecreate, String tname) {
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "track")
+    private List<TracksOfArtists> tracksofartists = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "track")
+    private List<ProgramsWithTracks> programswithtracks = new ArrayList<>();
+
+    public Track(String tname,Date datecreate) {
         this.datecreate = datecreate;
         this.tname = tname;
     }
