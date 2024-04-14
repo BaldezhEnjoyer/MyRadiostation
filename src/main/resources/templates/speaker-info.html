@@ -14,28 +14,26 @@
 
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/">Главная</a>
-        <a sec:authorize="hasRole('ADMIN')" class="me-3 py-2 link-body-emphasis text-decoration-none" href="/tracks/create">Добавить трек</a>
+        <a sec:authorize="hasRole('ADMIN')" class="me-3 py-2 link-body-emphasis text-decoration-none" href="/speakers/create">Добавить ведущего</a>
     </nav>
 </div>
 <div class="container mt-5">
-    <div th:each="el : ${track}" class="alert alert-info mt-2">
-        <h3 sec:authorize="hasRole('ADMIN')" th:text="'Id трека = '+${el.id}"/>
-        <h3 th:text="'Название: '+${el.tname}"/>
-        <p th:text="'Дата создания: '+${#temporals.format(el.datecreate, 'yyyy-MM-dd')}"/>
-        <p th:text="'Из альбома: '+${el.album.aname}"/>
-        <a th:href = "'/albums/'+ ${el.album.id}">Подробнее про альбом</a>
-        <div th:each="el2: ${el.tracksofartists}" class="container mt-5 nb-5">
-            <h3 sec:authorize="hasRole('ADMIN')" th:text="'Id исполнителя = '+${el2.artist.id}"/>
-            <h3 th:text="'Имя: '+${el2.artist.aname}"/>
-            <h3 th:text="'Фамилия: '+${el2.artist.surname}"/>
-            <a th:href = "'/artists/'+ ${el2.artist.id}">Подробнее про артиста</a>
-        </div>
-        <div th:each="el2: ${el.programswithtracks}" class="container mt-5 nb-5">
+    <div th:each="el : ${speaker}" class="alert alert-info mt-2">
+        <h3 sec:authorize="hasRole('ADMIN')" th:text="'Id ведущего = '+${el.id}"/>
+        <h3 th:text="'Имя: '+${el.sname}"/>
+        <h3 th:text="'Фамилия: '+${el.surname}"/>
+        <h3 th:text="'Возраст: '+${el.age}"/>
+        <p th:text="'Дата рождения: '+${#temporals.format(el.dateofbirth, 'yyyy-MM-dd')}"/>
+        <p th:text="'Дата смерти: '+${#temporals.format(el.dateofdeath, 'yyyy-MM-dd')}"/>
+        <div th:each="el2: ${el.speakersinschedule}" class="container mt-5 nb-5">
             <h3 sec:authorize="hasRole('ADMIN')" th:text="'Id программы = '+${el2.program.id}"/>
             <h3 th:text="'Название: '+${el2.program.pname}"/>
+            <p th:text="'Дата начала: '+${#temporals.format(el2.program.dayofprogram, 'yyyy-MM-dd')}"/>
+            <p th:text="'Время начала: '+${#temporals.format(el2.program.timestart, 'hh-mm')}"/>
+            <p th:text="'Время завершения: '+${#temporals.format(el2.program.timeend, 'hh-mm')}"/>
             <a th:href = "'/schedule/'+ ${el2.program.id}">Подробнее про программу</a>
         </div>
-        <form sec:authorize="hasRole('ADMIN')" th:action="'/tracks/'+ ${el.id} + '/delete'" method="post">
+        <form sec:authorize="hasRole('ADMIN')" th:action="'/speakers/'+ ${el.id} + '/delete'" method="post">
             <button class="btn btn-warning" type="submit">Удалить</button>
         </form>
     </div>

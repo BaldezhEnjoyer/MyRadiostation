@@ -13,16 +13,15 @@
 
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/">Главная</a>
-        <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/tracks">Треки</a>
+        <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/tracksofartists">Исполнители треков</a>
     </nav>
 </div>
 <div class="container mt-5 nb-5">
-    <h1>Добавление трека</h1>
-    <form action="/tracks/create" method="post">
-        <input type="text" name ="tname" placeholder="Введите название трека" class ="form-control"> <br>
-        <input type="date" name ="datecreate" placeholder="Введите дату создания" class ="form-control"> <br>
-        <input type="number" name ="idalbum" placeholder="Введите id альбома" class ="form-control"> <br>
-        <button type="submit" class="btn btn-success">Добавить трек</button>
+    <h1>Добавление связи</h1>
+    <form action="/tracksofartists/create" method="post">
+        <input type="number" name ="idartist" placeholder="Введите id исполнителя" class ="form-control"> <br>
+        <input type="number" name ="idtrack" placeholder="Введите id трека" class ="form-control"> <br>
+        <button type="submit" class="btn btn-success">Добавить связь</button>
     </form>
 </div>
 </body>

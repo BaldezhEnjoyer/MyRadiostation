@@ -14,10 +14,13 @@
 
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/">Главная</a>
-        <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/artists-find/">Поиск исполнителей</a>
         <a sec:authorize="hasRole('ADMIN')" class="me-3 py-2 link-body-emphasis text-decoration-none" href="/artists/create">Добавить артиста</a>
     </nav>
 </div>
+<form action="/artists-find/" method="get">
+    Поиск по фамилии исполнителя: <input type="text" name="surname"><br>
+    <input type="submit" value="Поиск"/>
+</form>
 <div class="container mt-5">
     <div th:each="el : ${artists}" class="alert alert-info mt-2">
         <h3 sec:authorize="hasRole('ADMIN')" th:text="'Id исполнителя = '+${el.id}"/>

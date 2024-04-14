@@ -14,10 +14,13 @@
 
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/">Главная</a>
-        <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/albums-find/">Поиск альбомов</a>
         <a sec:authorize="hasRole('ADMIN')" class="me-3 py-2 link-body-emphasis text-decoration-none" href="/albums/create">Добавить альбом</a>
     </nav>
 </div>
+<form action="/albums-find/" method="get">
+    Поиск по названию альбома: <input type="text" name="aname"><br>
+    <input type="submit" value="Поиск"/>
+</form>
 <div class="container mt-5">
     <div th:each="el : ${albums}" class="alert alert-info mt-2">
         <h3 sec:authorize="hasRole('ADMIN')" th:text="'Id альбома = '+${el.id}"/>

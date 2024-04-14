@@ -14,10 +14,13 @@
 
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/">Главная</a>
-        <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/tracks-find/">Поиск треков</a>
         <a sec:authorize="hasRole('ADMIN')" class="me-3 py-2 link-body-emphasis text-decoration-none" href="/tracks/create">Добавить трек</a>
     </nav>
 </div>
+<form action="/tracks-find/" method="get">
+    Поиск по названию трека: <input type="text" name="tname"><br>
+    <input type="submit" value="Поиск"/>
+</form>
 <div class="container mt-5">
     <div th:each="el : ${tracks}" class="alert alert-info mt-2">
         <h3 sec:authorize="hasRole('ADMIN')" th:text="'Id трека = '+${el.id}"/>

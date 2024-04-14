@@ -14,10 +14,13 @@
 
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/">Главная</a>
-        <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/schedule-find/">Поиск программ</a>
         <a sec:authorize="hasRole('ADMIN')" class="me-3 py-2 link-body-emphasis text-decoration-none" href="/schedule/create">Добавить программу</a>
     </nav>
 </div>
+<form action="/schedule-find/" method="get">
+    Поиск по дате начала программы: <input type="date" name="dayofprogram"><br>
+    <input type="submit" value="Поиск"/>
+</form>
 <div class="container mt-5">
     <div th:each="el : ${schedule}" class="alert alert-info mt-2">
         <h3 sec:authorize="hasRole('ADMIN')" th:text="${el.id}"/>

@@ -1,44 +1,69 @@
 package com.example.MyRadiostation.controllers;
+
+import com.example.MyRadiostation.models.Album;
+import com.example.MyRadiostation.models.Track;
 import com.example.MyRadiostation.repositories.AlbumsRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.example.MyRadiostation.models.Album;
-import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Optional;
 
-
+@EnableMethodSecurity
 @Controller
 @RequiredArgsConstructor
 public class AlbumsController {
     @Autowired
     private final AlbumsRepository albumsRepository;
 
+
     @GetMapping("/albums")
-    public String allAlbums( Model model) {
-        Iterable<Album> albums = albumsRepository.findAll();
-        model.addAttribute("albums",albums);
-        return "albums";
+    public String allAlbums(Model model) {
+            Iterable<Album> albums = albumsRepository.findAll();
+            model.addAttribute("albums", albums);
+            return "albums";
     }
 
+    @GetMapping("/albums-find/**")
+    public String getAlbumByAname(@RequestParam(name = "aname", required = false) String aname, Model model) {
+        model.addAttribute("albums",albumsRepository.findByAname(aname));
+        return "albums-find";
+    }
+
+    @GetMapping("/albums/{id}")
+    public String getAlbum(@PathVariable(value = "id") Long id, Model model) {
+        Optional<Album> album = albumsRepository.findById(id);
+        ArrayList<Album> res = new ArrayList<>();
+        album.ifPresent(res::add);
+        model.addAttribute("album",res);
+        return "album-info";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/albums/create")
     public String albumCreate(Album album) {
         return "album-create";
     }
 
     @PostMapping("/albums/create")
-    public String albumCreate(@RequestParam String aname, @RequestParam("datecreate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date datecreate, Model model) {
-        Album album = new Album(aname,datecreate);
-        albumsRepository.save(album);
+    @PreAuthorize("hasRole('ADMIN')")
+    public String albumCreate(@RequestParam(required = false) String aname, @RequestParam(value = "datecreate", required = false) LocalDate datecreate, Model model) {
+        albumsRepository.save(new Album(aname, datecreate));
         return "redirect:/albums";
     }
 
-
-
     @PostMapping("/albums/{id}/delete")
-    public String albumDelete(@PathVariable(value="id") Long id, Model model) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public String albumDelete(@PathVariable(value = "id") Long id) {
         Album album = albumsRepository.findById(id).orElseThrow();
         albumsRepository.delete(album);
         return "redirect:/albums";

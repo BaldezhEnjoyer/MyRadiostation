@@ -14,16 +14,15 @@
 
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/">Главная</a>
-        <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/genres-find/">Поиск жанров</a>
         <a sec:authorize="hasRole('ADMIN')" class="me-3 py-2 link-body-emphasis text-decoration-none" href="/genres/create">Добавить жанр</a>
     </nav>
 </div>
 <div class="container mt-5">
-    <div th:each="el : ${genres}" class="alert alert-info mt-2">
+    <div th:each="el : ${genre}" class="alert alert-info mt-2">
         <h3 sec:authorize="hasRole('ADMIN')" th:text="'Id жанра = '+${el.id}"/>
         <h3 th:text="'Название: '+${el.gname}"/>
         <div th:each="el2 : ${el.artists}" class="container mt-5 nb-5">
-            <h3 sec:authorize="hasRole('ADMIN')" th:text="'Id исполнителя = '${el2.id}"/>
+            <h3 sec:authorize="hasRole('ADMIN')" th:text="'Id исполнителя = '+${el2.id}"/>
             <h3 th:text="'Имя: '+${el2.aname}"/>
             <h3 th:text="'Фамилия: '+${el2.surname}"/>
             <a th:href = "'/artists/'+ ${el2.id}">Подробнее про артиста</a>

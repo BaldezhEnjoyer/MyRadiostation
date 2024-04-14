@@ -1,42 +1,69 @@
 package com.example.MyRadiostation.controllers;
+import com.example.MyRadiostation.models.Album;
+import com.example.MyRadiostation.repositories.AlbumsRepository;
 import com.example.MyRadiostation.repositories.TracksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.example.MyRadiostation.models.Track;
 import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Optional;
 
 
+@EnableMethodSecurity
 @Controller
 @RequiredArgsConstructor
 public class TracksController {
     @Autowired
     private final TracksRepository tracksRepository;
+    @Autowired
+     private final AlbumsRepository albumsRepository;
 
     @GetMapping("/tracks")
-    public String allTracks( Model model) {
-        Iterable<Track> tracks = tracksRepository.findAll();
-        model.addAttribute("tracks",tracks);
-        return "tracks";
+    public String allTracks(Model model) {
+            Iterable<Track> tracks = tracksRepository.findAll();
+            model.addAttribute("tracks", tracks);
+            return "tracks";
     }
 
+    @GetMapping("/tracks-find/**")
+    public String getTrackByTname(@RequestParam(name = "tname", required = false) String tname, Model model) {
+        model.addAttribute("tracks",tracksRepository.findByTname(tname));
+        return "tracks-find";
+    }
+
+    @GetMapping("/tracks/{id}")
+    public String getTrack(@PathVariable(value = "id") Long id, Model model) {
+        Optional<Track> track = tracksRepository.findById(id);
+        ArrayList<Track> res = new ArrayList<>();
+        track.ifPresent(res::add);
+        model.addAttribute("track",res);
+        return "track-info";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/tracks/create")
     public String trackCreate(Track track) {
         return "track-create";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/tracks/create")
-    public String trackCreate(@RequestParam String tname, @RequestParam("datecreate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date datecreate, Model model) {
-        Track track = new Track(tname,datecreate);
-        tracksRepository.save(track);
+    public String trackCreate(@RequestParam(required = false) String tname, @RequestParam(value = "datecreate",required = false) LocalDate datecreate, @RequestParam Long idalbum, Model model) {
+        Album album = albumsRepository.findById(idalbum).orElseThrow();
+        tracksRepository.save(new Track(tname,datecreate,album));
         return "redirect:/tracks";
     }
 
-
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/tracks/{id}/delete")
     public String trackDelete(@PathVariable(value="id") Long id, Model model) {
         Track track = tracksRepository.findById(id).orElseThrow();

@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>MyRadiostation</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -19,6 +20,9 @@
         <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/speakers">Ведущие</a>
         <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/albums">Альбомы</a>
         <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/genres">Жанры</a>
+        <a sec:authorize="hasRole('ADMIN')" class="me-3 py-2 link-body-emphasis text-decoration-none" href="/programswithtracks">Программы с треками</a>
+        <a sec:authorize="hasRole('ADMIN')" class="me-3 py-2 link-body-emphasis text-decoration-none" href="/speakersinschedule">Ведущие в расписании</a>
+        <a sec:authorize="hasRole('ADMIN')" class="me-3 py-2 link-body-emphasis text-decoration-none" href="/tracksofartists">Исполнители треков</a>
     </nav>
 </div>
 </body>
