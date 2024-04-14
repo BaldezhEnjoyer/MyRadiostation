@@ -23,7 +23,7 @@
         <h3 sec:authorize="hasRole('ADMIN')" th:text="'Id жанра = '+${el.id}"/>
         <h3 th:text="'Название: '+${el.gname}"/>
         <div th:each="el2 : ${el.artists}" class="container mt-5 nb-5">
-            <h3 sec:authorize="hasRole('ADMIN')" th:text="'Id исполнителя = '${el2.id}"/>
+            <h3 sec:authorize="hasRole('ADMIN')" th:text="'Id исполнителя = '+${el2.id}"/>
             <h3 th:text="'Имя: '+${el2.aname}"/>
             <h3 th:text="'Фамилия: '+${el2.surname}"/>
             <a th:href = "'/artists/'+ ${el2.id}">Подробнее про артиста</a>

@@ -14,7 +14,7 @@
 
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/">Главная</a>
-        <a sec:authorize="hasRole('ADMIN')" class="me-3 py-2 link-body-emphasis text-decoration-none" href="/tracksofartists/create">Добавить связь программы с треком</a>
+        <a sec:authorize="hasRole('ADMIN')" class="me-3 py-2 link-body-emphasis text-decoration-none" href="/tracksofartists/create">Добавить связь исполнителя с треком</a>
     </nav>
 </div>
 <form sec:authorize="hasRole('ADMIN')" action="/tracksofartists-find/" method="get">
@@ -26,11 +26,11 @@
     <input type="submit" value="Поиск"/>
 </form>
 <div class="container mt-5">
-    <div th:each="el : ${racksofartists}" class="alert alert-info mt-2">
+    <div th:each="el : ${tracksofartists}" class="alert alert-info mt-2">
         <h3 th:text="'Id = '+${el.id}"/>
         <h3 th:text="'Id исполнителя = '+${el.artist.id}"/>
         <h3 th:text="'Id трека = '+${el.track.id}"/>
-        <form sec:authorize="hasRole('ADMIN')" th:action="'/racksofartists/'+ ${el.id} + '/delete'" method="post">
+        <form sec:authorize="hasRole('ADMIN')" th:action="'/tracksofartists/'+ ${el.id} + '/delete'" method="post">
             <button class="btn btn-warning" type="submit">Удалить</button>
         </form>
     </div>
