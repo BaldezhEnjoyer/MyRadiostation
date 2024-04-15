@@ -21,6 +21,10 @@
     Поиск по названию трека: <input type="text" name="tname"><br>
     <input type="submit" value="Поиск"/>
 </form>
+<form action="/tracks-find/" method="get">
+    Поиск по дате создания трека: <input type="date" name="datecreate"><br>
+    <input type="submit" value="Поиск"/>
+</form>
 <div class="container mt-5">
     <div th:each="el : ${tracks}" class="alert alert-info mt-2">
         <h3 sec:authorize="hasRole('ADMIN')" th:text="'Id трека = '+${el.id}"/>
@@ -39,6 +43,7 @@
             <h3 th:text="'Название: '+${el2.program.pname}"/>
             <a th:href = "'/schedule/'+ ${el2.program.id}">Подробнее про программу</a>
         </div>
+        <a sec:authorize="hasRole('ADMIN')" class="btn btn-warning" th:href="'/tracks/'+ ${el.id} + '/edit'">Изменить</a>
         <form sec:authorize="hasRole('ADMIN')" th:action="'/tracks/'+ ${el.id} + '/delete'" method="post">
             <button class="btn btn-warning" type="submit">Удалить</button>
         </form>

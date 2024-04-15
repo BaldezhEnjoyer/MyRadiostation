@@ -50,6 +50,16 @@ public class TracksController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/tracks/{id}/edit")
+    public String TrackEdit(@PathVariable(value = "id") Long id, Model model) {
+        Optional<Track> track = tracksRepository.findById(id);
+        ArrayList<Track> res = new ArrayList<>();
+        track.ifPresent(res::add);
+        model.addAttribute("track",res);
+        return "track-edit";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/tracks/create")
     public String trackCreate(Track track) {
         return "track-create";
@@ -71,4 +81,16 @@ public class TracksController {
         return "redirect:/tracks";
     }
 
+    @PostMapping("/tracks/{id}/edit")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String trackEdit(@PathVariable(value = "id") Long id,@RequestParam(required = false) String tname, @RequestParam(value = "datecreate",required = false) LocalDate datecreate, @RequestParam Long idalbum) {
+        Track track = tracksRepository.findById(id).orElseThrow();
+        Album album = albumsRepository.findById(idalbum).orElseThrow();
+        track.setTname(tname);
+        track.setDatecreate(datecreate);
+        track.setAlbum(album);
+        tracksRepository.save(track);
+        return "redirect:/tracks";
+    }
+    
 }

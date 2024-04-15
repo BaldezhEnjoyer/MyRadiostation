@@ -34,9 +34,19 @@ public class AlbumsController {
     }
 
     @GetMapping("/albums-find/**")
-    public String getAlbumByAname(@RequestParam(name = "aname", required = false) String aname, Model model) {
-        model.addAttribute("albums",albumsRepository.findByAname(aname));
-        return "albums-find";
+    public String getAlbumByAname(@RequestParam(name = "aname", required = false) String aname,@RequestParam(name = "datecreate", required = false) LocalDate datecreate, Model model) {
+        if(aname !=null && datecreate==null) {
+            model.addAttribute("albums", albumsRepository.findByAname(aname));
+            return "albums-find";
+        }
+        else if (aname ==null && datecreate!=null) {
+            model.addAttribute("albums", albumsRepository.findByDatecreate(datecreate));
+            return "albums-find";
+        }
+        else{
+            model.addAttribute("albums", albumsRepository.findByAname(aname));
+            return "albums-find";
+        }
     }
 
     @GetMapping("/albums/{id}")
@@ -46,6 +56,16 @@ public class AlbumsController {
         album.ifPresent(res::add);
         model.addAttribute("album",res);
         return "album-info";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/albums/{id}/edit")
+    public String AlbumEdit(@PathVariable(value = "id") Long id, Model model) {
+        Optional<Album> album = albumsRepository.findById(id);
+        ArrayList<Album> res = new ArrayList<>();
+        album.ifPresent(res::add);
+        model.addAttribute("album",res);
+        return "album-edit";
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -66,6 +86,16 @@ public class AlbumsController {
     public String albumDelete(@PathVariable(value = "id") Long id) {
         Album album = albumsRepository.findById(id).orElseThrow();
         albumsRepository.delete(album);
+        return "redirect:/albums";
+    }
+
+    @PostMapping("/albums/{id}/edit")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String albumEdit(@PathVariable(value = "id") Long id,@RequestParam(required = false) String aname, @RequestParam(value = "datecreate", required = false) LocalDate datecreate) {
+        Album album = albumsRepository.findById(id).orElseThrow();
+        album.setAname(aname);
+        album.setDatecreate(datecreate);
+        albumsRepository.save(album);
         return "redirect:/albums";
     }
 

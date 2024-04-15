@@ -4,8 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.MyRadiostation.models.Track;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface TracksRepository extends JpaRepository<Track,Long> {
     List<Track> findByTname(String tname);
+    List<Track> findByDatecreate(LocalDate datecreate);
 }

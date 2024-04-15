@@ -21,6 +21,10 @@
     Поиск по названию альбома: <input type="text" name="aname"><br>
     <input type="submit" value="Поиск"/>
 </form>
+<form action="/albums-find/" method="get">
+    Поиск по дате создания альбома: <input type="date" name="datecreate"><br>
+    <input type="submit" value="Поиск"/>
+</form>
 <div class="container mt-5">
     <div th:each="el : ${albums}" class="alert alert-info mt-2">
         <h3 sec:authorize="hasRole('ADMIN')" th:text="'Id альбома = '+${el.id}"/>
@@ -32,6 +36,7 @@
             <p th:text="'Дата создания: '+${#temporals.format(el2.datecreate, 'yyyy-MM-dd')}"/>
             <a th:href = "'/tracks/'+ ${el2.id}">Подробнее про трек</a>
         </div>
+        <a sec:authorize="hasRole('ADMIN')" class="btn btn-warning" th:href="'/albums/'+ ${el.id} + '/edit'">Изменить</a>
         <form sec:authorize="hasRole('ADMIN')" th:action="'/albums/'+ ${el.id} + '/delete'" method="post">
             <button class="btn btn-warning" type="submit">Удалить</button>
         </form>

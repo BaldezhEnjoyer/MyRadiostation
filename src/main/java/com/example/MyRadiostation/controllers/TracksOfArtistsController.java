@@ -1,7 +1,5 @@
 package com.example.MyRadiostation.controllers;
-import com.example.MyRadiostation.models.Artist;
-import com.example.MyRadiostation.models.Track;
-import com.example.MyRadiostation.models.TracksOfArtists;
+import com.example.MyRadiostation.models.*;
 import com.example.MyRadiostation.repositories.TracksOfArtistsRepository;
 import com.example.MyRadiostation.repositories.TracksRepository;
 import com.example.MyRadiostation.repositories.ArtistsRepository;
@@ -12,6 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.Optional;
 
 
 @EnableMethodSecurity
@@ -73,10 +74,32 @@ public class TracksOfArtistsController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/tracksofartists/{id}/edit")
+    public String SpeakersInScheduleEdit(@PathVariable(value = "id") Long id, Model model) {
+        Optional<TracksOfArtists> tracksofartists = tracksOfArtistsRepository.findById(id);
+        ArrayList<TracksOfArtists> res = new ArrayList<>();
+        tracksofartists.ifPresent(res::add);
+        model.addAttribute("tracksofartists",res);
+        return "tracksofartists-edit";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/tracksofartists/{id}/delete")
     public String TracksOfArtistsDelete(@PathVariable(value="id") Long id) {
         TracksOfArtists tof = tracksOfArtistsRepository.findById(id).orElseThrow();
         tracksOfArtistsRepository.delete(tof);
+        return "redirect:/tracksofartists";
+    }
+
+    @PostMapping("/tracksofartists/{id}/edit")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String SpeakersInScheduleEdit(@PathVariable(value = "id") Long id,@RequestParam Long idtrack,@RequestParam Long idartist) {
+        TracksOfArtists tracksofartists = tracksOfArtistsRepository.findById(id).orElseThrow();
+        Track track =  tracksRepository.findById(idtrack).orElseThrow();
+        Artist artist = artistsRepository.findById(idartist).orElseThrow();
+        tracksofartists.setTrack(track);
+        tracksofartists.setArtist(artist);
+        tracksOfArtistsRepository.save(tracksofartists);
         return "redirect:/tracksofartists";
     }
 

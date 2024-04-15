@@ -1,5 +1,4 @@
 package com.example.MyRadiostation.controllers;
-import com.example.MyRadiostation.models.Album;
 import com.example.MyRadiostation.repositories.GenresRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,6 +9,7 @@ import com.example.MyRadiostation.models.Genre;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -43,6 +43,16 @@ public class GenresController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/genres/{id}/edit")
+    public String GenreEdit(@PathVariable(value = "id") Long id, Model model) {
+        Optional<Genre> genre = genresRepository.findById(id);
+        ArrayList<Genre> res = new ArrayList<>();
+        genre.ifPresent(res::add);
+        model.addAttribute("genre",res);
+        return "genre-edit";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/genres/create")
     public String genreCreate(Genre genre) {
         return "genre-create";
@@ -61,6 +71,15 @@ public class GenresController {
     public String genreDelete(@PathVariable(value="id") Long id) {
         Genre genre = genresRepository.findById(id).orElseThrow();
         genresRepository.delete(genre);
+        return "redirect:/genres";
+    }
+
+    @PostMapping("/genres/{id}/edit")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String genreEdit(@PathVariable(value = "id") Long id,@RequestParam(required = false) String gname) {
+        Genre genre = genresRepository.findById(id).orElseThrow();
+        genre.setGname(gname);
+        genresRepository.save(genre);
         return "redirect:/genres";
     }
 

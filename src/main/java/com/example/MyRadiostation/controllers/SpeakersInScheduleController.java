@@ -1,8 +1,5 @@
 package com.example.MyRadiostation.controllers;
-import com.example.MyRadiostation.models.Schedule;
-import com.example.MyRadiostation.models.Speaker;
-import com.example.MyRadiostation.models.SpeakersInSchedule;
-import com.example.MyRadiostation.models.Track;
+import com.example.MyRadiostation.models.*;
 import com.example.MyRadiostation.repositories.SpeakersInScheduleRepository;
 import com.example.MyRadiostation.repositories.SpeakersRepository;
 import com.example.MyRadiostation.repositories.ScheduleRepository;
@@ -13,6 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
+
+import java.util.ArrayList;
+import java.util.Optional;
 
 @EnableMethodSecurity
 @Controller
@@ -77,6 +77,28 @@ public class SpeakersInScheduleController {
     public String SpeakersInScheduleDelete(@PathVariable(value="id") Long id) {
         SpeakersInSchedule sis = speakersInScheduleRepository.findById(id).orElseThrow();
         speakersInScheduleRepository.delete(sis);
+        return "redirect:/speakersinschedule";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/speakersinschedule/{id}/edit")
+    public String SpeakersInScheduleEdit(@PathVariable(value = "id") Long id, Model model) {
+        Optional<SpeakersInSchedule> speakersinschedule = speakersInScheduleRepository.findById(id);
+        ArrayList<SpeakersInSchedule> res = new ArrayList<>();
+        speakersinschedule.ifPresent(res::add);
+        model.addAttribute("speakersinschedule",res);
+        return "speakersinschedule-edit";
+    }
+
+    @PostMapping("/speakersinschedule/{id}/edit")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String SpeakersInScheduleEdit(@PathVariable(value = "id") Long id,@RequestParam Long idspeaker,@RequestParam Long idprogram) {
+        SpeakersInSchedule speakersinschedule = speakersInScheduleRepository.findById(id).orElseThrow();
+        Schedule program =  scheduleRepository.findById(idprogram).orElseThrow();
+        Speaker speaker = speakersRepository.findById(idspeaker).orElseThrow();
+        speakersinschedule.setProgram(program);
+        speakersinschedule.setSpeaker(speaker);
+        speakersInScheduleRepository.save(speakersinschedule);
         return "redirect:/speakersinschedule";
     }
 

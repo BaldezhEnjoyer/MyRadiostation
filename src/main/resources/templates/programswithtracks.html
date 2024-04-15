@@ -23,6 +23,7 @@
         <h3 th:text="'Id = '+${el.id}"/>
         <h3 th:text="'Id программы = '+${el.program.id}"/>
         <h3 th:text="'Id трека = '+${el.track.id}"/>
+        <a sec:authorize="hasRole('ADMIN')" class="btn btn-warning" th:href="'/programswithtracks/'+ ${el.id} + '/edit'">Изменить</a>
         <form sec:authorize="hasRole('ADMIN')" th:action="'/programswithtracks/'+ ${el.id} + '/delete'" method="post">
             <button class="btn btn-warning" type="submit">Удалить</button>
         </form>

@@ -35,6 +35,7 @@
             <h3 th:text="'Название: '+${el2.track.tname}"/>
             <a th:href = "'/tracks/'+ ${el2.track.id}">Подробнее про трек</a>
         </div>
+        <a sec:authorize="hasRole('ADMIN')" class="btn btn-warning" th:href="'/schedule/'+ ${el.id} + '/edit'">Изменить</a>
         <form sec:authorize="hasRole('ADMIN')" th:action="'/schedule/'+ ${el.id} + '/delete'" method="post">
             <button class="btn btn-warning" type="submit">Удалить</button>
         </form>

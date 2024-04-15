@@ -13,16 +13,17 @@
 
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/">Главная</a>
-        <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/tracks">Треки</a>
+        <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/schedule">Расписание</a>
     </nav>
 </div>
 <div class="container mt-5 nb-5">
-    <h1>Редактирование трека</h1>
-    <div th:each="el : ${track}">
+    <h1>Редактировать программу</h1>
+    <div th:each="el : ${program}">
         <form method="post">
-            <input type="text" th:value="${el.tname}" name ="tname" placeholder="Введите название трека" class ="form-control"> <br>
-            <input type="date" th:value="${el.datecreate}" name ="datecreate" placeholder="Введите дату создания" class ="form-control"> <br>
-            <input type="number" th:value="${el.idalbum}" name ="idalbum" placeholder="Введите id альбома" class ="form-control"> <br>
+            <input type="text" th:value="${el.pname}" name ="pname" placeholder="Введите название программы" class ="form-control"> <br>
+            <input type="date" th:value="${el.dayofprogram}" name ="dayofprogram" placeholder="Введите дату начала программы" class ="form-control"> <br>
+            <input type="time" th:value="${el.timestart}" name ="timestart" placeholder="Введите время начала программы" class ="form-control"> <br>
+            <input type="time" th:value="${el.timeend}" name ="timeend" placeholder="Введите время завершения программы" class ="form-control"> <br>
             <button type="submit" class="btn btn-success">Изменить</button>
         </form>
     </div>

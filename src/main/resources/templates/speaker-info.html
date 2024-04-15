@@ -33,6 +33,7 @@
             <p th:text="'Время завершения: '+${#temporals.format(el2.program.timeend, 'hh-mm')}"/>
             <a th:href = "'/schedule/'+ ${el2.program.id}">Подробнее про программу</a>
         </div>
+        <a sec:authorize="hasRole('ADMIN')" class="btn btn-warning" th:href="'/speakers/'+ ${el.id} + '/edit'">Изменить</a>
         <form sec:authorize="hasRole('ADMIN')" th:action="'/speakers/'+ ${el.id} + '/delete'" method="post">
             <button class="btn btn-warning" type="submit">Удалить</button>
         </form>

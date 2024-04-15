@@ -28,6 +28,7 @@
             <h3 th:text="'Фамилия: '+${el2.surname}"/>
             <a th:href = "'/artists/'+ ${el2.id}">Подробнее про артиста</a>
         </div>
+        <a sec:authorize="hasRole('ADMIN')" class="btn btn-warning" th:href="'/genres/'+ ${el.id} + '/edit'">Изменить</a>
         <form sec:authorize="hasRole('ADMIN')" th:action="'/genres/'+ ${el.id} + '/delete'" method="post">
             <button class="btn btn-warning" type="submit">Удалить</button>
         </form>

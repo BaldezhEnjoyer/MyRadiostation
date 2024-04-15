@@ -29,6 +29,7 @@
             <p th:text="'Дата создания: '+${#temporals.format(el2.datecreate, 'yyyy-MM-dd')}"/>
             <a th:href = "'/tracks/'+ ${el2.id}">Подробнее про трек</a>
         </div>
+        <a sec:authorize="hasRole('ADMIN')" class="btn btn-warning" th:href="'/albums/'+ ${el.id} + '/edit'">Изменить</a>
         <form sec:authorize="hasRole('ADMIN')" th:action="'/albums/'+ ${el.id} + '/delete'" method="post">
             <button class="btn btn-warning" type="submit">Удалить</button>
         </form>

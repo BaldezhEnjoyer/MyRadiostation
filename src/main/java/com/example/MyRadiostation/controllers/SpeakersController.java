@@ -1,5 +1,4 @@
 package com.example.MyRadiostation.controllers;
-import com.example.MyRadiostation.models.Album;
 import com.example.MyRadiostation.models.Track;
 import com.example.MyRadiostation.repositories.SpeakersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +46,16 @@ public class SpeakersController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/speakers/{id}/edit")
+    public String SpeakerEdit(@PathVariable(value = "id") Long id, Model model) {
+        Optional<Speaker> speaker = speakersRepository.findById(id);
+        ArrayList<Speaker> res = new ArrayList<>();
+        speaker.ifPresent(res::add);
+        model.addAttribute("speaker",res);
+        return "speaker-edit";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/speakers/create")
     public String speakerCreate(Speaker speaker) {
         return "speaker-create";
@@ -65,6 +74,19 @@ public class SpeakersController {
     public String speakerDelete(@PathVariable(value="id") Long id, Model model) {
         Speaker speaker = speakersRepository.findById(id).orElseThrow();
         speakersRepository.delete(speaker);
+        return "redirect:/speakers";
+    }
+
+    @PostMapping("/speakers/{id}/edit")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String speakerEdit(@PathVariable(value = "id") Long id,@RequestParam(required = false) String sname, @RequestParam(required = false) String surname, @RequestParam(required = false) Short age, @RequestParam(value = "dateofbirth",required = false) LocalDate dateofbirth, @RequestParam(value = "dateofdeath",required = false) LocalDate dateofdeath) {
+        Speaker speaker = speakersRepository.findById(id).orElseThrow();
+        speaker.setSname(sname);
+        speaker.setSurname(surname);
+        speaker.setAge(age);
+        speaker.setDateofbirth(dateofbirth);
+        speaker.setDateofdeath(dateofdeath);
+        speakersRepository.save(speaker);
         return "redirect:/speakers";
     }
 

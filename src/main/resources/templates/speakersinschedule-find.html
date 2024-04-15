@@ -22,7 +22,15 @@
     <input type="submit" value="Поиск"/>
 </form>
 <form sec:authorize="hasRole('ADMIN')" action="/speakersinschedule-find/" method="get">
+    Поиск по фамилии ведущего: <input type="text" name="surname"><br>
+    <input type="submit" value="Поиск"/>
+</form>
+<form sec:authorize="hasRole('ADMIN')" action="/speakersinschedule-find/" method="get">
     Поиск по id программы: <input type="number" name="idprogram"><br>
+    <input type="submit" value="Поиск"/>
+</form>
+<form sec:authorize="hasRole('ADMIN')" action="/speakersinschedule-find/" method="get">
+    Поиск по названию программы: <input type="text" name="pname"><br>
     <input type="submit" value="Поиск"/>
 </form>
 <div class="container mt-5">
@@ -30,6 +38,7 @@
         <h3 th:text="'Id = '+ ${el.id}"/>
         <h3 th:text="'Id ведущего = ' +${el.speaker.id}"/>
         <h3 th:text="'Id программы = '+${el.program.id}"/>
+        <a sec:authorize="hasRole('ADMIN')" class="btn btn-warning" th:href="'/speakersinschedule/'+ ${el.id} + '/edit'">Изменить</a>
         <form sec:authorize="hasRole('ADMIN')" th:action="'/speakersinschedule/'+ ${el.id} + '/delete'" method="post">
             <button class="btn btn-warning" type="submit">Удалить</button>
         </form>

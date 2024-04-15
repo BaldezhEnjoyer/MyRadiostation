@@ -1,4 +1,5 @@
 package com.example.MyRadiostation.controllers;
+import com.example.MyRadiostation.models.Album;
 import com.example.MyRadiostation.models.Schedule;
 import com.example.MyRadiostation.models.Track;
 import com.example.MyRadiostation.models.ProgramsWithTracks;
@@ -12,6 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Optional;
 
 @EnableMethodSecurity
 @Controller
@@ -63,6 +68,16 @@ public class ProgramsWithTracksController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/programswithtracks/{id}/edit")
+    public String ProgramsWithTracksEdit(@PathVariable(value = "id") Long id, Model model) {
+        Optional<ProgramsWithTracks> programswithtracks = programsWithTracksRepository.findById(id);
+        ArrayList<ProgramsWithTracks> res = new ArrayList<>();
+        programswithtracks.ifPresent(res::add);
+        model.addAttribute("programswithtracks",res);
+        return "programswithtracks-edit";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/programswithtracks/create")
     public String ProgramsWithTracksCreate(@RequestParam Long idtrack,@RequestParam Long idprogram) {
         Schedule program =  scheduleRepository.findById(idprogram).orElseThrow();
@@ -76,6 +91,18 @@ public class ProgramsWithTracksController {
     public String ProgramsWithTracksDelete(@PathVariable(value="id") Long id, Model model) {
         ProgramsWithTracks pwt = programsWithTracksRepository.findById(id).orElseThrow();
         programsWithTracksRepository.delete(pwt);
+        return "redirect:/programswithtracks";
+    }
+
+    @PostMapping("/programswithtracks/{id}/edit")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String ProgramsWithTrackEdit(@PathVariable(value = "id") Long id,@RequestParam Long idtrack,@RequestParam Long idprogram) {
+        ProgramsWithTracks programswithtrack = programsWithTracksRepository.findById(id).orElseThrow();
+        Schedule program =  scheduleRepository.findById(idprogram).orElseThrow();
+        Track track = tracksRepository.findById(idtrack).orElseThrow();
+        programswithtrack.setProgram(program);
+        programswithtrack.setTrack(track);
+        programsWithTracksRepository.save(programswithtrack);
         return "redirect:/programswithtracks";
     }
 

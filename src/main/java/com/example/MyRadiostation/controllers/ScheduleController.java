@@ -1,5 +1,4 @@
 package com.example.MyRadiostation.controllers;
-import com.example.MyRadiostation.models.Album;
 import com.example.MyRadiostation.models.Track;
 import com.example.MyRadiostation.repositories.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +42,16 @@ public class ScheduleController {
         return "program-info";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/schedule/{id}/edit")
+    public String ProgramEdit(@PathVariable(value = "id") Long id, Model model) {
+        Optional<Schedule> program = scheduleRepository.findById(id);
+        ArrayList<Schedule> res = new ArrayList<>();
+        program.ifPresent(res::add);
+        model.addAttribute("program",res);
+        return "program-edit";
+    }
+
     @GetMapping("/schedule-find/**")
     public String getProgramByDayofprogram(@RequestParam(name = "dayofprogram", required = false) LocalDate dayofprogram, Model model) {
         model.addAttribute("schedule",scheduleRepository.findByDayofprogram(dayofprogram));
@@ -67,6 +76,18 @@ public class ScheduleController {
     public String programDelete(@PathVariable(value="id") Long id) {
         Schedule program = scheduleRepository.findById(id).orElseThrow();
         scheduleRepository.delete(program);
+        return "redirect:/schedule";
+    }
+
+    @PostMapping("/schedule/{id}/edit")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String programEdit(@PathVariable(value = "id") Long id,@RequestParam(required = false) String pname, @RequestParam(value = "dayofprogram",required = false) LocalDate dayofprogram, @RequestParam(value = "timestart",required = false)  String timestart, @RequestParam(value = "timeend",required = false)  String timeend) {
+        Schedule program = scheduleRepository.findById(id).orElseThrow();
+        program.setPname(pname);
+        program.setDayofprogram(dayofprogram);
+        program.setTimestart(LocalTime.parse(timestart));
+        program.setTimeend(LocalTime.parse(timeend));
+        scheduleRepository.save(program);
         return "redirect:/schedule";
     }
 
