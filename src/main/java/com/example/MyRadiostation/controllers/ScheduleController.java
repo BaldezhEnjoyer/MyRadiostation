@@ -53,9 +53,21 @@ public class ScheduleController {
     }
 
     @GetMapping("/schedule-find/**")
-    public String getProgramByDayofprogram(@RequestParam(name = "dayofprogram", required = false) LocalDate dayofprogram, Model model) {
-        model.addAttribute("schedule",scheduleRepository.findByDayofprogram(dayofprogram));
-        return "schedule-find";
+    public String getProgramByDayofprogram(@RequestParam(name = "dayofprogram", required = false) LocalDate dayofprogram,@RequestParam(value = "timestart",required = false)  String timestart, @RequestParam(value = "timeend",required = false)  String timeend, Model model) {
+        if(dayofprogram!=null && timeend==null && timestart==null) {
+            model.addAttribute("schedule", scheduleRepository.findByDayofprogram(dayofprogram));
+            return "schedule-find";
+        } else if (dayofprogram==null && timeend!=null && timestart==null) {
+            model.addAttribute("schedule", scheduleRepository.findByTimeend(LocalTime.parse(timeend)));
+            return "schedule-find";
+        } else if (dayofprogram==null && timeend==null && timestart!=null) {
+            model.addAttribute("schedule", scheduleRepository.findByTimeend(LocalTime.parse(timestart)));
+            return "schedule-find";
+        }
+        else{
+            model.addAttribute("schedule", scheduleRepository.findByDayofprogram(dayofprogram));
+            return "schedule-find";
+        }
     }
 
     @PreAuthorize("hasRole('ADMIN')")

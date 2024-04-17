@@ -35,9 +35,18 @@ public class ArtistsController {
     }
 
     @GetMapping("/artists-find/**")
-    public String getArtistBySurname(@RequestParam(name = "surname", required = false) String surname, Model model) {
-        model.addAttribute("artists",artistsRepository.findBySurname(surname));
-        return "artists-find";
+    public String getArtistBySurname(@RequestParam(name = "surname", required = false) String surname, @RequestParam(value = "dateofbirth",required = false) LocalDate dateofbirth, Model model) {
+        if(surname!=null && dateofbirth==null) {
+            model.addAttribute("artists", artistsRepository.findBySurname(surname));
+            return "artists-find";
+        } else if (surname==null && dateofbirth!=null) {
+            model.addAttribute("artists", artistsRepository.findByDateofbirth(dateofbirth));
+            return "artists-find";
+        }
+        else{
+            model.addAttribute("artists", artistsRepository.findBySurname(surname));
+            return "artists-find";
+        }
     }
 
     @GetMapping("/artists/{id}")
@@ -90,6 +99,8 @@ public class ArtistsController {
         artist.setAge(age);
         artist.setDateofbirth(dateofbirth);
         artist.setDateofdeath(dateofdeath);
+        Genre genre = genresRepository.findById(idgenre).orElseThrow();
+        artist.setGenre(genre);
         artistsRepository.save(artist);
         return "redirect:/artists";
     }

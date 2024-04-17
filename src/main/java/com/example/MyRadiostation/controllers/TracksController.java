@@ -34,10 +34,31 @@ public class TracksController {
             return "tracks";
     }
 
+    @GetMapping("/tracksindiapozon/**")
+    public String NewestTracks(@RequestParam(value = "start",required = false) LocalDate start,@RequestParam(value = "end",required = false) LocalDate end,Model model) {
+        model.addAttribute("tracks", tracksRepository.findAllByDatecreateBetween(start,end));
+        return "tracksindiapozon";
+    }
+
+    @GetMapping("/tracklistenings/**")
+    public String TracksListenings(@RequestParam(name = "trackname", required = false) String trackname,Model model) {
+        model.addAttribute("trackslistenings", tracksRepository.CountListeningsTracks(trackname));
+        return "tracklistenings";
+    }
+
     @GetMapping("/tracks-find/**")
-    public String getTrackByTname(@RequestParam(name = "tname", required = false) String tname, Model model) {
-        model.addAttribute("tracks",tracksRepository.findByTname(tname));
-        return "tracks-find";
+    public String getTrackByTname(@RequestParam(name = "tname", required = false) String tname,@RequestParam(value = "datecreate",required = false) LocalDate datecreate, Model model) {
+        if(tname!=null && datecreate==null) {
+            model.addAttribute("tracks", tracksRepository.findByTname(tname));
+            return "tracks-find";
+        } else if (tname==null && datecreate!=null) {
+            model.addAttribute("tracks", tracksRepository.findByDatecreate(datecreate));
+            return "tracks-find";
+        }
+        else{
+            model.addAttribute("tracks", tracksRepository.findByTname(tname));
+            return "tracks-find";
+        }
     }
 
     @GetMapping("/tracks/{id}")

@@ -22,7 +22,7 @@
         <form method="post">
             <input type="text" th:value="${el.tname}" name ="tname" placeholder="Введите название трека" class ="form-control"> <br>
             <input type="date" th:value="${el.datecreate}" name ="datecreate" placeholder="Введите дату создания" class ="form-control"> <br>
-            <input type="number" th:value="${el.idalbum}" name ="idalbum" placeholder="Введите id альбома" class ="form-control"> <br>
+            <input type="number" th:value="${el.album.id}" name ="idalbum" placeholder="Введите id альбома" class ="form-control"> <br>
             <button type="submit" class="btn btn-success">Изменить</button>
         </form>
     </div>

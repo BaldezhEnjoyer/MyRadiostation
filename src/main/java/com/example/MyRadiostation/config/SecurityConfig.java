@@ -46,6 +46,8 @@ public class SecurityConfig {
                                 "/tracks-find/**",
                                 "/speakers/**",
                                 "/tracks/**",
+                                "/newesttracks/**",
+                                "/trackslistenings/**",
                                 "/album-info",
                                 "/artist-info",
                                 "/genre-info",

@@ -31,9 +31,19 @@ public class SpeakersController {
     }
 
     @GetMapping("/speakers-find/**")
-    public String getSpeakerBySurname(@RequestParam(name = "surname", required = false) String surname, Model model) {
-        model.addAttribute("speakers",speakersRepository.findBySurname(surname));
-        return "speakers-find";
+    public String getSpeakerBySurname(@RequestParam(name = "surname", required = false) String surname,@RequestParam(value = "dateofbirth",required = false) LocalDate dateofbirth, Model model) {
+        if(surname!=null && dateofbirth==null) {
+            model.addAttribute("speakers", speakersRepository.findBySurname(surname));
+            return "speakers-find";
+        }
+        else if(surname==null && dateofbirth!=null) {
+            model.addAttribute("speakers", speakersRepository.findByDateofbirth(dateofbirth));
+            return "speakers-find";
+        }
+        else{
+            model.addAttribute("speakers", speakersRepository.findBySurname(surname));
+            return "speakers-find";
+        }
     }
 
     @GetMapping("/speakers/{id}")

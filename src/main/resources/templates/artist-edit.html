@@ -25,7 +25,7 @@
             <input type="number" th:value="${el.age}" name ="age" placeholder="Введите возраст исполнителя" class ="form-control"> <br>
             <input type="date" th:value="${el.dateofbirth}" name ="dateofbirth" placeholder="Введите дату рождения исполнителя" class ="form-control"> <br>
             <input type="date" th:value="${el.dateofdeath}" name ="dateofdeath" placeholder="Введите дату смерти исполнителя(опционально)" class ="form-control"> <br>
-            <input type="number" th:value="${el.idgenre}" name ="idgenre" placeholder="Введите id жанра" class ="form-control"> <br>
+            <input type="number" th:value="${el.genre.id}" name ="idgenre" placeholder="Введите id жанра" class ="form-control"> <br>
             <button type="submit" class="btn btn-success">Изменить</button>
         </form>
     </div>
